@@ -3,7 +3,7 @@ import React from 'react'
 function PlayerDetails(props) {
     return (
         <div className="c-player--details">
-            <div className="details-img">
+            <div className={props.isPlaying ? "details-img rotate-player" : "details-img"}>
                 <img src={props.song.img_src} alt="" />
             </div>
             <h3 className="details-title">{props.song.title}</h3>

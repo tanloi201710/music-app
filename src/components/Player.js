@@ -4,12 +4,12 @@ import PlayerDetails from './PlayerDetails'
 
 function Player(props) {
     const audio = useRef(null);
-    const [isPlaying,setIsPlaying] = useState(false);
-    const [duration,setDuration] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [duration, setDuration] = useState(0);
     const [percentage, setPercentage] = useState(0);
-    const [currentTime,setCurrentTime] = useState(0);
-    const [volume,setVolume] = useState(0);
-    const [isMuted,setIsMuted] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [volume, setVolume] = useState(0);
+    const [isMuted, setIsMuted] = useState(false);
     //const [prevVolume,setPreVolume] = useState(0);
 
     const SkipSong = useCallback((forwards = true) => {
@@ -18,7 +18,7 @@ function Player(props) {
                 let temp = props.currentSongIndex;
                 temp++;
 
-                if(temp > props.songs.length - 1) {
+                if (temp > props.songs.length - 1) {
                     temp = 0;
                 };
 
@@ -30,7 +30,7 @@ function Player(props) {
                 let temp = props.currentSongIndex;
                 temp--;
 
-                if(temp < 0) {
+                if (temp < 0) {
                     temp = props.songs.length - 1;
                 };
 
@@ -41,25 +41,25 @@ function Player(props) {
     }, [props]);
 
     useEffect(() => {
-        if(isPlaying) {
+        if (isPlaying) {
             const playPromise = audio.current.play();
-            if(playPromise !== undefined) {
+            if (playPromise !== undefined) {
                 playPromise.then().catch((error) => console.log(error));
             }
         } else {
             audio.current.pause();
         }
-    }, [SkipSong,isPlaying]);
+    }, [SkipSong, isPlaying]);
 
 
-    
+
 
     const getCurrDuration = (e) => {
         const percent = ((e.currentTarget.currentTime / e.currentTarget.duration) * 100).toFixed(2);
         const time = e.currentTarget.currentTime;
 
-        if(!isNaN(percent)) setPercentage(+percent);
-        
+        if (!isNaN(percent)) setPercentage(+percent);
+
         setCurrentTime(time.toFixed(2));
     };
 
@@ -83,25 +83,26 @@ function Player(props) {
 
     return (
         <div className="c-player">
-            <audio 
-            src={props.songs[props.currentSongIndex].src} 
-            ref={audio}
-            onTimeUpdate={getCurrDuration}
-            onLoadedData={(e) => {
-                setDuration(e.currentTarget.duration.toFixed(2));
-                setVolume(e.currentTarget.volume * 100);
-            }}
-            onEnded={() => SkipSong()}
+            <audio
+                src={props.songs[props.currentSongIndex].src}
+                ref={audio}
+                onTimeUpdate={getCurrDuration}
+                onLoadedData={(e) => {
+                    setDuration(e.currentTarget.duration.toFixed(2));
+                    setVolume(e.currentTarget.volume * 100);
+                }}
+                onEnded={() => SkipSong()}
             ></audio>
             <h4>Đang phát</h4>
-            <PlayerDetails 
-                song={props.songs[props.currentSongIndex]} 
+            <PlayerDetails
+                song={props.songs[props.currentSongIndex]}
+                isPlaying={isPlaying}
             />
-            <PlayerControls 
-                isPlaying={isPlaying} 
-                setIsPlaying={setIsPlaying} 
+            <PlayerControls
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
                 SkipSong={SkipSong}
-                percentage={percentage} 
+                percentage={percentage}
                 onChange={onChange}
                 duration={duration}
                 currentTime={currentTime}
